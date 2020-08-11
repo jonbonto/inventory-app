@@ -9,10 +9,13 @@ import {
   Skeleton,
   Popconfirm,
   notification,
+  Typography,
 } from "antd";
 import ProtectedComponent from "../components/ProtectedComponent";
 import FirebaseContext from "../contexts/firebase";
 import Layout from "../components/Layout";
+
+const { Title } = Typography;
 
 const layout = {
   labelCol: { span: 8 },
@@ -103,7 +106,7 @@ function CategoryPage() {
 
   const AddForm = (
     <Form {...layout} form={form} name="control-hooks">
-      <Form.Item name="id" label="Name" rules={[{ required: true }]} hidden />
+      <Form.Item name="id" label="Name" hidden />
       <Form.Item name="name" label="Name" rules={[{ required: true }]}>
         <Input />
       </Form.Item>
@@ -194,10 +197,13 @@ function CategoryPage() {
   return (
     <ProtectedComponent>
       <Layout>
-        <div>Category page</div>
-        <Button type="primary" onClick={handleAdd} className="button-add">
-          Add Category
-        </Button>
+        <div className="title">
+          <Title level={3}>Categories</Title>
+
+          <Button type="primary" onClick={handleAdd}>
+            Add Category
+          </Button>
+        </div>
         <Modal
           title={modal.title}
           visible={modal.visible}
