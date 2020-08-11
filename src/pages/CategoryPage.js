@@ -76,6 +76,7 @@ function CategoryPage() {
     });
     setModal({
       visible: true,
+      title: `Edit ${category.name}`,
       content: AddForm,
       edit: true,
     });
@@ -126,9 +127,11 @@ function CategoryPage() {
     return () => unsubscribe();
   }, [firebase]);
 
-  const showModal = () => {
+  const handleAdd = () => {
+    form.resetFields();
     setModal({
       visible: true,
+      title: "Add Category",
       content: AddForm,
     });
   };
@@ -190,17 +193,17 @@ function CategoryPage() {
     <ProtectedComponent>
       <Layout>
         <div>Category page</div>
-        <Button type="primary" onClick={showModal}>
+        <Button type="primary" onClick={handleAdd}>
           Add Category
         </Button>
         <Modal
-          title="Title"
+          title={modal.title}
           visible={modal.visible}
           onOk={handleOk}
           confirmLoading={modal.confirmLoading}
           onCancel={handleCancel}
         >
-          <p>{modal.content}</p>
+          {modal.content}
         </Modal>
         {loading ? (
           <Skeleton active />
