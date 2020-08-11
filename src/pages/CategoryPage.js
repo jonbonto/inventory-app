@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Table, Space } from "antd";
+import { Table, Space, Button, Modal, Input, Form } from "antd";
 import ProtectedComponent from "../components/ProtectedComponent";
 import FirebaseContext from "../contexts/firebase";
 import Layout from "../components/Layout";
@@ -29,10 +29,32 @@ const columns = [
   },
 ];
 
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
 function CategoryPage() {
   const firebase = useContext(FirebaseContext);
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState({
+    visible: false,
+    confirmLoading: false,
+  });
+  const [form] = Form.useForm();
+
+  const AddForm = (
+    <Form {...layout} form={form} name="control-hooks">
+      <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+        <Input />
+      </Form.Item>
+
+      <Form.Item name="description" label="Description">
+        <Input />
+      </Form.Item>
+    </Form>
+  );
 
   useEffect(() => {
     const unsubscribe = firebase.categories().onSnapshot((querySnapshot) => {
@@ -41,18 +63,71 @@ function CategoryPage() {
         categories.push({
           ...doc.data(),
           key: doc.data().id,
-          description: "description",
         });
       });
       setCategories(categories);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, [firebase]);
+
+  const showModal = () => {
+    setModal({
+      visible: true,
+      content: AddForm,
+    });
+  };
+
+  const handleOk = () => {
+    setModal((modal) => ({
+      ...modal,
+      visible: true,
+      confirmLoading: true,
+    }));
+
+    const { name, description } = form.getFieldsValue();
+
+    firebase
+      .categories()
+      .add({
+        name,
+        description,
+      })
+      .then(function (docRef) {
+        setModal({
+          visible: false,
+          confirmLoading: false,
+        });
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
+  };
+
+  const handleCancel = () => {
+    setModal({
+      visible: false,
+    });
+  };
+
+  if (loading) return "Loading...";
 
   return (
     <ProtectedComponent>
       <Layout>
         <div>Category page</div>
+        <Button type="primary" onClick={showModal}>
+          Add Category
+        </Button>
+        <Modal
+          title="Title"
+          visible={modal.visible}
+          onOk={handleOk}
+          confirmLoading={modal.confirmLoading}
+          onCancel={handleCancel}
+        >
+          <p>{modal.content}</p>
+        </Modal>
         <Table columns={columns} dataSource={categories} />
       </Layout>
     </ProtectedComponent>
