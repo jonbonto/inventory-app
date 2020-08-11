@@ -86,15 +86,15 @@ function CategoryPage() {
     },
   ];
 
-  const handleEdit = (category) => {
+  const handleEdit = (product) => {
     form.setFieldsValue({
-      name: category.name,
-      description: category.description,
-      id: category.key,
+      ...product,
+      id: product.key,
+      category: product.category.id,
     });
     setModal({
       visible: true,
-      title: `Edit ${category.name}`,
+      title: `Edit ${product.name}`,
       content: AddForm,
       edit: true,
     });
@@ -195,13 +195,18 @@ function CategoryPage() {
   };
 
   const handleOk = () => {
+    const { name, description, category, stock = 0 } = form.getFieldsValue();
+
+    if (!name || !category) {
+      form.validateFields();
+      return;
+    }
+
     setModal((modal) => ({
       ...modal,
       visible: true,
       confirmLoading: true,
     }));
-
-    const { name, description, category, stock } = form.getFieldsValue();
 
     if (modal.edit) {
       const { id } = form.getFieldsValue();
