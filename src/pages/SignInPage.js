@@ -1,6 +1,7 @@
 import React, { Component, useContext } from "react";
 import * as ROUTES from "../constants/routes";
 import FirebaseContext from "../contexts/firebase";
+import { useHistory } from "react-router-dom";
 
 const INITIAL_STATE = {
   email: "",
@@ -22,7 +23,7 @@ class SignInFormBase extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        this.props.goHome();
       })
       .catch((error) => {
         this.setState({ error });
@@ -68,10 +69,16 @@ class SignInFormBase extends Component {
 
 const SignInPage = () => {
   const firebase = useContext(FirebaseContext);
+  let history = useHistory();
+
+  function goHome() {
+    history.push(ROUTES.HOME);
+  }
+
   return (
     <div>
       <h1>SignIn</h1>
-      <SignInFormBase firebase={firebase} />
+      <SignInFormBase firebase={firebase} goHome={goHome} />
     </div>
   );
 };

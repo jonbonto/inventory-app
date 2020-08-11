@@ -7,7 +7,6 @@ import SignInPage from "../pages/SignInPage";
 import HomePage from "../pages/HomePage";
 import ProductPage from "../pages/ProductPage";
 import CategoryPage from "../pages/CategoryPage";
-import FirebaseContext from "../contexts/firebase";
 
 const App = () => (
   <Router>
