@@ -1,20 +1,37 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox, Typography, notification } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import * as ROUTES from "../constants/routes";
 import FirebaseContext from "../contexts/firebase";
 import { useHistory } from "react-router-dom";
 import AuthUserContext from "../contexts/session";
 
+const { Title } = Typography;
+
+const openNotificationWithIcon = (type, message, description) => {
+  notification[type]({
+    message,
+    description,
+  });
+};
+
 const SignInForm = ({ firebase, goHome }) => {
   const [loading, setLoading] = useState(false);
   const onFinish = (values) => {
     const { email, password } = values;
     setLoading(true);
-    firebase.doSignInWithEmailAndPassword(email, password).then(() => {
-      setLoading(false);
-      goHome();
-    });
+    firebase
+      .doSignInWithEmailAndPassword(email, password)
+      .then(() => {
+        goHome();
+      })
+      .catch((error) => {
+        openNotificationWithIcon("error", "Login Error", error.message);
+        console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -80,8 +97,10 @@ const SignInPage = () => {
 
   return (
     <div className="login-container">
-      <h1>SignIn</h1>
       <div className="login-form-container">
+        <Title level={3} style={{ textAlign: "center" }}>
+          Sign In
+        </Title>
         <SignInForm firebase={firebase} goHome={goHome} />
       </div>
     </div>

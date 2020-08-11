@@ -36,13 +36,24 @@ code {
 }
 
 .login-container {
-  max-width: 300px;
-  margin: 200px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+  height: 100vh;
+  background-color: #ececec;
+}
+
+.login-form-container {
+  padding: 24px;
+  border-radius: 4px;
+  border: 1px solid #40a9ff;
 }
 
 .login-form {
-  max-width: 300px;
+  min-width: 320px;
 }
+
 .login-form-forgot {
   float: right;
 }
