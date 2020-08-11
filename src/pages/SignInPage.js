@@ -1,72 +1,68 @@
 import React, { Component, useContext, useEffect } from "react";
+import { Form, Input, Button, Checkbox } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import * as ROUTES from "../constants/routes";
 import FirebaseContext from "../contexts/firebase";
 import { useHistory } from "react-router-dom";
 import AuthUserContext from "../contexts/session";
 
-const INITIAL_STATE = {
-  email: "",
-  password: "",
-  error: null,
-};
+const SignInForm = ({ firebase, goHome }) => {
+  const onFinish = (values) => {
+    const { email, password } = values;
 
-class SignInFormBase extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { ...INITIAL_STATE };
-  }
-
-  onSubmit = (event) => {
-    const { email, password } = this.state;
-
-    this.props.firebase
-      .doSignInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.goHome();
-      })
-      .catch((error) => {
-        this.setState({ error });
-      });
-
-    event.preventDefault();
+    firebase.doSignInWithEmailAndPassword(email, password).then(() => {
+      goHome();
+    });
   };
 
-  onChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
   };
 
-  render() {
-    const { email, password, error } = this.state;
-
-    const isInvalid = password === "" || email === "";
-
-    return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
+  return (
+    <Form
+      name="normal_login"
+      className="login-form"
+      initialValues={{ remember: true }}
+      onFinish={onFinish}
+    >
+      <Form.Item
+        name="email"
+        rules={[{ required: true, message: "Please input your Email!" }]}
+      >
+        <Input
+          prefix={<UserOutlined className="site-form-item-icon" />}
+          placeholder="Email"
         />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
+      </Form.Item>
+      <Form.Item
+        name="password"
+        rules={[{ required: true, message: "Please input your Password!" }]}
+      >
+        <Input
+          prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
           placeholder="Password"
         />
-        <button disabled={isInvalid} type="submit">
-          Sign In
-        </button>
+      </Form.Item>
+      <Form.Item>
+        <Form.Item name="remember" valuePropName="checked" noStyle>
+          <Checkbox>Remember me</Checkbox>
+        </Form.Item>
 
-        {error && <p>{error.message}</p>}
-      </form>
-    );
-  }
-}
+        <a className="login-form-forgot" href="">
+          Forgot password
+        </a>
+      </Form.Item>
+
+      <Form.Item>
+        <Button type="primary" htmlType="submit" className="login-form-button">
+          Log in
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+};
 
 const SignInPage = () => {
   const firebase = useContext(FirebaseContext);
@@ -77,16 +73,18 @@ const SignInPage = () => {
     if (authUser) {
       history.push(ROUTES.HOME);
     }
-  }, [authUser, history.push]);
+  }, [authUser, history]);
 
   function goHome() {
     history.push(ROUTES.HOME);
   }
 
   return (
-    <div>
+    <div className="login-container">
       <h1>SignIn</h1>
-      <SignInFormBase firebase={firebase} goHome={goHome} />
+      <div className="login-form-container">
+        <SignInForm firebase={firebase} goHome={goHome} />
+      </div>
     </div>
   );
 };

@@ -26,10 +26,6 @@ const App = () => {
     <AuthUserContext.Provider value={authUser}>
       <Router>
         <div>
-          <Navigation />
-
-          <hr />
-
           <Route path={ROUTES.SIGN_IN} component={SignInPage} />
           <Route path={ROUTES.HOME} exact={true} component={HomePage} />
           <Route path={ROUTES.PRODUCT} component={ProductPage} />

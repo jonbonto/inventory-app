@@ -1,10 +1,13 @@
 import React from "react";
 import ProtectedComponent from "../components/ProtectedComponent";
+import MainLayout from "../components/Layout";
 
 function ProductPage() {
   return (
     <ProtectedComponent>
-      <div>ProductPage</div>
+      <MainLayout>
+        <div>ProductPage</div>
+      </MainLayout>
     </ProtectedComponent>
   );
 }

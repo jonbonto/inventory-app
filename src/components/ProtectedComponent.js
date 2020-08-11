@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import * as ROUTES from "../constants/routes";
@@ -12,7 +12,7 @@ function ProtectedComponent({ children }) {
     if (!authUser) {
       history.push(ROUTES.SIGN_IN);
     }
-  }, [authUser, history.push]);
+  }, [authUser, history]);
   return children;
 }
 

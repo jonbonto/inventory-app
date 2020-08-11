@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import FirebaseContext from "../contexts/firebase";
 import * as ROUTES from "../constants/routes";
+import { Button } from "antd";
 
 const SignOutButton = (props) => {
   const firebase = useContext(FirebaseContext);
@@ -20,9 +21,9 @@ const SignOutButton = (props) => {
   };
 
   return (
-    <button type="button" onClick={logout}>
+    <Button type="link" danger onClick={logout}>
       Sign Out
-    </button>
+    </Button>
   );
 };
 
