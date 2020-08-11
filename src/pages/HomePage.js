@@ -1,14 +1,25 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Statistic, Card, Row, Col } from "antd";
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
+import { Card, Typography } from "antd";
 import ProtectedComponent from "../components/ProtectedComponent";
 import MainLayout from "../components/Layout";
 import FirebaseContext from "../contexts/firebase";
+import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from "recharts";
 
 function HomePage() {
   const firebase = useContext(FirebaseContext);
   const [categoriesCount, setCategoriesCount] = useState(0);
   const [productsCount, setProductsCount] = useState(0);
+
+  const dataCount = [
+    {
+      name: "Category",
+      count: categoriesCount,
+    },
+    {
+      name: "Product",
+      count: productsCount,
+    },
+  ];
 
   useEffect(() => {
     const unsubscribeCategories = firebase
@@ -32,29 +43,22 @@ function HomePage() {
   return (
     <ProtectedComponent>
       <MainLayout>
-        <div className="site-statistic-card">
-          <Row gutter={16}>
-            <Col span={12}>
-              <Card>
-                <Statistic
-                  title="Categories"
-                  value={categoriesCount}
-                  valueStyle={{ color: "#3f8600" }}
-                  prefix={<ArrowUpOutlined />}
-                />
-              </Card>
-            </Col>
-            <Col span={12}>
-              <Card>
-                <Statistic
-                  title="Products"
-                  value={productsCount}
-                  valueStyle={{ color: "#cf1322" }}
-                  prefix={<ArrowDownOutlined />}
-                />
-              </Card>
-            </Col>
-          </Row>
+        <div className="homepage-container">
+          <Card style={{ maxWidth: 600 }}>
+            <Typography.Title level={3}>
+              Products and Categories
+            </Typography.Title>
+            <BarChart width={480} height={250} data={dataCount}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis
+                allowDecimals={false}
+                label={{ value: "Counts", angle: -90 }}
+              />
+              <Tooltip />
+              <Bar dataKey="count" fill="#40a9ff" />
+            </BarChart>
+          </Card>
         </div>
       </MainLayout>
     </ProtectedComponent>

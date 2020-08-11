@@ -64,9 +64,10 @@ code {
   width: 100%;
 }
 
-.site-statistic-card {
-  background: #ececec;
-  padding: 30px;
+.homepage-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .title {
