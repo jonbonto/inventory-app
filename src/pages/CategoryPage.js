@@ -41,7 +41,6 @@ function CategoryPage() {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
     },
 
     {
@@ -54,14 +53,17 @@ function CategoryPage() {
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <Button type="link" onClick={() => handleEdit(record)}>
+          <Button type="link" warning onClick={() => handleEdit(record)}>
             Edit
           </Button>
           <Popconfirm
             title="Sure to delete?"
             onConfirm={() => handleDelete(record)}
+            okType="danger"
           >
-            <a>Delete</a>
+            <Button type="link" danger>
+              Delete
+            </Button>
           </Popconfirm>
         </Space>
       ),
@@ -193,7 +195,7 @@ function CategoryPage() {
     <ProtectedComponent>
       <Layout>
         <div>Category page</div>
-        <Button type="primary" onClick={handleAdd}>
+        <Button type="primary" onClick={handleAdd} className="button-add">
           Add Category
         </Button>
         <Modal

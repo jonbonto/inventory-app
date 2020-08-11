@@ -1,9 +1,9 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { Layout, Menu, Breadcrumb } from "antd";
 import { DesktopOutlined, PieChartOutlined } from "@ant-design/icons";
 import SignOutButton from "./SignOutButton";
 import * as ROUTES from "../constants/routes";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
 

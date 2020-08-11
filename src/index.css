@@ -57,3 +57,8 @@ code {
   background: #ececec;
   padding: 30px;
 }
+
+.button-add {
+  float: right;
+  margin-bottom: 16px;
+}
