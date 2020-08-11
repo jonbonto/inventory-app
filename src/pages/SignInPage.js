@@ -1,4 +1,4 @@
-import React, { Component, useContext, useEffect } from "react";
+import React, { Component, useContext, useEffect, useState } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import * as ROUTES from "../constants/routes";
@@ -7,10 +7,12 @@ import { useHistory } from "react-router-dom";
 import AuthUserContext from "../contexts/session";
 
 const SignInForm = ({ firebase, goHome }) => {
+  const [loading, setLoading] = useState(false);
   const onFinish = (values) => {
     const { email, password } = values;
-
+    setLoading(true);
     firebase.doSignInWithEmailAndPassword(email, password).then(() => {
+      setLoading(false);
       goHome();
     });
   };
@@ -56,7 +58,12 @@ const SignInForm = ({ firebase, goHome }) => {
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button">
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="login-form-button"
+          loading={loading}
+        >
           Log in
         </Button>
       </Form.Item>
