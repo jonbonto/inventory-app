@@ -1,33 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Table, Space, Button, Modal, Input, Form, Skeleton } from "antd";
+import {
+  Table,
+  Space,
+  Button,
+  Modal,
+  Input,
+  Form,
+  Skeleton,
+  Popconfirm,
+} from "antd";
 import ProtectedComponent from "../components/ProtectedComponent";
 import FirebaseContext from "../contexts/firebase";
 import Layout from "../components/Layout";
-
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (text, record) => (
-      <Space size="middle">
-        <a>Edit</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
 
 const layout = {
   labelCol: { span: 8 },
@@ -43,6 +27,49 @@ function CategoryPage() {
     confirmLoading: false,
   });
   const [form] = Form.useForm();
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a>{text}</a>,
+    },
+
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (text, record) => (
+        <Space size="middle">
+          <a>Edit</a>
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => handleDelete(record.key)}
+          >
+            <a>Delete</a>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const handleDelete = (key) => {
+    firebase
+      .categories()
+      .doc(key)
+      .delete()
+      .then(function () {
+        console.log("Document successfully deleted!");
+      })
+      .catch(function (error) {
+        console.error("Error removing document: ", error);
+      });
+  };
 
   const AddForm = (
     <Form {...layout} form={form} name="control-hooks">
@@ -62,7 +89,7 @@ function CategoryPage() {
       querySnapshot.forEach((doc) => {
         categories.push({
           ...doc.data(),
-          key: doc.data().id,
+          key: doc.id,
         });
       });
       setCategories(categories);
