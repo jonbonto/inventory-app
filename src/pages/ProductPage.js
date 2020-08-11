@@ -90,7 +90,7 @@ function CategoryPage() {
     form.setFieldsValue({
       ...product,
       id: product.key,
-      category: product.category.id,
+      category: product.category?.id,
     });
     setModal({
       visible: true,
@@ -172,7 +172,7 @@ function CategoryPage() {
             ...doc.data(),
             key: doc.id,
             category,
-            categoryName: category.name,
+            categoryName: category?.name ?? "uncategorized",
           });
         });
         setProducts(products);

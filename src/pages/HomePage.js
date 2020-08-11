@@ -57,12 +57,29 @@ function HomePage() {
     };
   }, [firebase]);
 
-  const dataProductPerCategory = Object.keys(
-    productCountPerCategory
-  ).map((catId) => ({
-    category: categoryMapper[catId],
-    count: productCountPerCategory[catId],
-  }));
+  let dataProductPerCategory = Object.keys(productCountPerCategory)
+    .map((catId) => ({
+      category: categoryMapper[catId],
+      count: productCountPerCategory[catId],
+    }))
+    .reduce((acc, product) => {
+      if (!product.category) {
+        let prod = acc.find((prod) => prod.category === "uncategorized");
+        acc = acc.filter((prod) => prod.category !== "uncategorized");
+        if (prod) {
+          prod.count += product.count;
+        } else {
+          prod = {
+            category: "uncategorized",
+            count: product.count,
+          };
+        }
+        acc.push(prod);
+      } else {
+        acc.push(product);
+      }
+      return acc;
+    }, []);
 
   return (
     <ProtectedComponent>
