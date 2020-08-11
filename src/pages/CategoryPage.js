@@ -8,6 +8,7 @@ import {
   Form,
   Skeleton,
   Popconfirm,
+  notification,
 } from "antd";
 import ProtectedComponent from "../components/ProtectedComponent";
 import FirebaseContext from "../contexts/firebase";
@@ -16,6 +17,13 @@ import Layout from "../components/Layout";
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
+};
+
+const openNotificationWithIcon = (type, message, description) => {
+  notification[type]({
+    message,
+    description,
+  });
 };
 
 function CategoryPage() {
@@ -46,10 +54,12 @@ function CategoryPage() {
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <a>Edit</a>
+          <Button type="link" onClick={() => handleEdit(record)}>
+            Edit
+          </Button>
           <Popconfirm
             title="Sure to delete?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record)}
           >
             <a>Delete</a>
           </Popconfirm>
@@ -58,21 +68,39 @@ function CategoryPage() {
     },
   ];
 
-  const handleDelete = (key) => {
+  const handleEdit = (category) => {
+    form.setFieldsValue({
+      name: category.name,
+      description: category.description,
+      id: category.key,
+    });
+    setModal({
+      visible: true,
+      content: AddForm,
+      edit: true,
+    });
+  };
+
+  const handleDelete = (category) => {
     firebase
       .categories()
-      .doc(key)
+      .doc(category.key)
       .delete()
       .then(function () {
-        console.log("Document successfully deleted!");
+        openNotificationWithIcon(
+          "success",
+          category.name,
+          `Category ${category.name} successfully deleted!`
+        );
       })
       .catch(function (error) {
-        console.error("Error removing document: ", error);
+        openNotificationWithIcon("error", category.name, error.message);
       });
   };
 
   const AddForm = (
     <Form {...layout} form={form} name="control-hooks">
+      <Form.Item name="id" label="Name" rules={[{ required: true }]} hidden />
       <Form.Item name="name" label="Name" rules={[{ required: true }]}>
         <Input />
       </Form.Item>
@@ -114,21 +142,42 @@ function CategoryPage() {
 
     const { name, description } = form.getFieldsValue();
 
-    firebase
-      .categories()
-      .add({
-        name,
-        description,
-      })
-      .then(function (docRef) {
-        setModal({
-          visible: false,
-          confirmLoading: false,
+    if (modal.edit) {
+      const { id } = form.getFieldsValue();
+      const docRef = firebase.categories().doc(id);
+      docRef
+        .update({
+          name,
+          description: description ?? "",
+        })
+        .then(function () {
+          setModal({
+            visible: false,
+            confirmLoading: false,
+          });
+          openNotificationWithIcon("success", name, "Successfully edited");
+        })
+        .catch(function (error) {
+          openNotificationWithIcon("error", name, error.message);
         });
-      })
-      .catch(function (error) {
-        console.error("Error adding document: ", error);
-      });
+    } else {
+      firebase
+        .categories()
+        .add({
+          name,
+          description: description ?? "",
+        })
+        .then(function (docRef) {
+          setModal({
+            visible: false,
+            confirmLoading: false,
+          });
+          openNotificationWithIcon("success", name, "Successfully added");
+        })
+        .catch(function (error) {
+          openNotificationWithIcon("error", name, error.message);
+        });
+    }
   };
 
   const handleCancel = () => {
