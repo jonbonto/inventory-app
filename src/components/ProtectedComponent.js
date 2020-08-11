@@ -12,7 +12,7 @@ function ProtectedComponent({ children }) {
     if (!authUser) {
       history.push(ROUTES.SIGN_IN);
     }
-  }, [authUser]);
+  }, [authUser, history.push]);
   return children;
 }
 

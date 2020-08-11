@@ -1,7 +1,8 @@
-import React, { Component, useContext } from "react";
+import React, { Component, useContext, useEffect } from "react";
 import * as ROUTES from "../constants/routes";
 import FirebaseContext from "../contexts/firebase";
 import { useHistory } from "react-router-dom";
+import AuthUserContext from "../contexts/session";
 
 const INITIAL_STATE = {
   email: "",
@@ -70,6 +71,13 @@ class SignInFormBase extends Component {
 const SignInPage = () => {
   const firebase = useContext(FirebaseContext);
   let history = useHistory();
+  const authUser = useContext(AuthUserContext);
+
+  useEffect(() => {
+    if (authUser) {
+      history.push(ROUTES.HOME);
+    }
+  }, [authUser, history.push]);
 
   function goHome() {
     history.push(ROUTES.HOME);
