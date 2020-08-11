@@ -1,7 +1,12 @@
 import React from "react";
+import ProtectedComponent from "../components/ProtectedComponent";
 
 function CategoryPage() {
-  return <div>Category page</div>;
+  return (
+    <ProtectedComponent>
+      <div>Category page</div>
+    </ProtectedComponent>
+  );
 }
 
 export default CategoryPage;
