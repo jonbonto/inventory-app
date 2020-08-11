@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Table, Space, Button, Modal, Input, Form } from "antd";
+import { Table, Space, Button, Modal, Input, Form, Skeleton } from "antd";
 import ProtectedComponent from "../components/ProtectedComponent";
 import FirebaseContext from "../contexts/firebase";
 import Layout from "../components/Layout";
@@ -110,8 +110,6 @@ function CategoryPage() {
     });
   };
 
-  if (loading) return "Loading...";
-
   return (
     <ProtectedComponent>
       <Layout>
@@ -128,7 +126,11 @@ function CategoryPage() {
         >
           <p>{modal.content}</p>
         </Modal>
-        <Table columns={columns} dataSource={categories} />
+        {loading ? (
+          <Skeleton active />
+        ) : (
+          <Table columns={columns} dataSource={categories} />
+        )}
       </Layout>
     </ProtectedComponent>
   );
