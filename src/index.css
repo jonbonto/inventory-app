@@ -44,3 +44,8 @@ code {
 .login-form-button {
   width: 100%;
 }
+
+.site-statistic-card {
+  background: #ececec;
+  padding: 30px;
+}
