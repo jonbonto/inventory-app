@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Layout, Menu, Breadcrumb } from "antd";
-import { DesktopOutlined, PieChartOutlined } from "@ant-design/icons";
+import {
+  DesktopOutlined,
+  PieChartOutlined,
+  TagOutlined,
+} from "@ant-design/icons";
 import SignOutButton from "./SignOutButton";
 import * as ROUTES from "../constants/routes";
 import { Link, useLocation } from "react-router-dom";
@@ -31,7 +35,7 @@ function MainLayout({ children }) {
           <Menu.Item key="product" icon={<DesktopOutlined />}>
             <Link to={ROUTES.PRODUCT}>Products</Link>
           </Menu.Item>
-          <Menu.Item key="category" icon={<PieChartOutlined />}>
+          <Menu.Item key="category" icon={<TagOutlined />}>
             <Link to={ROUTES.CATEGORY}>Categories</Link>
           </Menu.Item>
         </Menu>
@@ -45,7 +49,15 @@ function MainLayout({ children }) {
         </Header>
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={ROUTES.HOME}>Home</Link>
+            </Breadcrumb.Item>
+            {menuKey === "product" && (
+              <Breadcrumb.Item>Product</Breadcrumb.Item>
+            )}
+            {menuKey === "category" && (
+              <Breadcrumb.Item>Category</Breadcrumb.Item>
+            )}
           </Breadcrumb>
           <div
             className="site-layout-background"
