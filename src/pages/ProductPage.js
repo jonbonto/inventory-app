@@ -60,20 +60,23 @@ function CategoryPage() {
       key: "imageUrl",
       render: (text, record) => {
         const imageUrl = text ? text : noImageUrl;
-        return <img src={imageUrl} alt="No Image" style={{ width: 48 }} />;
+        return <img src={imageUrl} alt="Product" style={{ width: 48 }} />;
       },
+      responsive: ["md"],
     },
 
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
+      responsive: ["md"],
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
       align: "right",
+      responsive: ["md"],
     },
     {
       title: "Stock",
@@ -85,6 +88,7 @@ function CategoryPage() {
       title: "Category",
       dataIndex: "categoryName",
       key: "categoryName",
+      responsive: ["md"],
     },
     {
       title: "Action",

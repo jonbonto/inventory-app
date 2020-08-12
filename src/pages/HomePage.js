@@ -1,9 +1,17 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Card, Typography } from "antd";
+import { Card, Typography, Row, Col, Grid } from "antd";
 import ProtectedComponent from "../components/ProtectedComponent";
 import MainLayout from "../components/Layout";
 import FirebaseContext from "../contexts/firebase";
-import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from "recharts";
+import {
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Bar,
+  ResponsiveContainer,
+} from "recharts";
 
 function HomePage() {
   const firebase = useContext(FirebaseContext);
@@ -11,6 +19,12 @@ function HomePage() {
   const [productsCount, setProductsCount] = useState(0);
   const [productCountPerCategory, setProductCountPerCategory] = useState({});
   const [categoryMapper, setCategoryMapper] = useState({});
+
+  const screens = Grid.useBreakpoint();
+  let chartWidth = 300;
+  if ((screens.md && !screens.lg) || screens.xl) {
+    chartWidth = 480;
+  }
 
   const dataCount = [
     {
@@ -85,35 +99,46 @@ function HomePage() {
     <ProtectedComponent>
       <MainLayout>
         <div className="homepage-container">
-          <Card style={{ maxWidth: 600 }}>
-            <Typography.Title level={3}>
-              Products and Categories
-            </Typography.Title>
-            <BarChart width={480} height={250} data={dataCount}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis
-                allowDecimals={false}
-                label={{ value: "Counts", angle: -90 }}
-              />
-              <Tooltip />
-              <Bar dataKey="count" fill="#40a9ff" />
-            </BarChart>
-          </Card>
-
-          <Card style={{ maxWidth: 600 }}>
-            <Typography.Title level={3}>Products per Category</Typography.Title>
-            <BarChart width={480} height={250} data={dataProductPerCategory}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="category" />
-              <YAxis
-                allowDecimals={false}
-                label={{ value: "Counts", angle: -90 }}
-              />
-              <Tooltip />
-              <Bar dataKey="count" fill="#40a9ff" />
-            </BarChart>
-          </Card>
+          <Row gutter={{ lg: 16 }} jusify="center" style={{ width: "100%" }}>
+            <Col xs={24} lg={12} style={{ marginBottom: 24 }}>
+              <Card style={{ justifyContent: "center", display: "flex" }}>
+                <Typography.Title level={3}>
+                  Products and Categories
+                </Typography.Title>
+                <BarChart width={chartWidth} height={250} data={dataCount}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis
+                    allowDecimals={false}
+                    label={{ value: "Counts", angle: -90 }}
+                  />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#40a9ff" />
+                </BarChart>
+              </Card>
+            </Col>
+            <Col xs={24} lg={12}>
+              <Card style={{ justifyContent: "center", display: "flex" }}>
+                <Typography.Title level={3}>
+                  Products per Category
+                </Typography.Title>
+                <BarChart
+                  width={chartWidth}
+                  height={250}
+                  data={dataProductPerCategory}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="category" />
+                  <YAxis
+                    allowDecimals={false}
+                    label={{ value: "Counts", angle: -90 }}
+                  />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#40a9ff" />
+                </BarChart>
+              </Card>
+            </Col>
+          </Row>
         </div>
       </MainLayout>
     </ProtectedComponent>

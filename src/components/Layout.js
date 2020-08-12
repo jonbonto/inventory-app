@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Menu, Breadcrumb } from "antd";
+import { Layout, Menu, Breadcrumb, Grid } from "antd";
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -15,18 +15,28 @@ function MainLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
   let menuKey = "home";
   const { pathname } = useLocation();
+  const screens = Grid.useBreakpoint();
 
   if (pathname !== "/") {
     menuKey = pathname.substring(1);
   }
 
   const onCollapse = (collapsed) => {
+    if (!screens.md) {
+      setCollapsed(true);
+      return true;
+    }
     setCollapsed(collapsed);
   };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={onCollapse}
+        breakpoint="md"
+      >
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={[menuKey]} mode="inline">
           <Menu.Item key="home" icon={<PieChartOutlined />}>
