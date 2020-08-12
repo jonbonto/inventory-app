@@ -195,26 +195,23 @@ function CategoryPage() {
   }, [firebase]);
 
   useEffect(() => {
-    let unsubscribe = () => {};
-    if (categories.length) {
-      unsubscribe = firebase.products().onSnapshot((querySnapshot) => {
-        const products = [];
-        querySnapshot.forEach((doc) => {
-          const categoryId = doc.data().category;
-          const category = categories.find(
-            (category) => categoryId === category.id
-          );
-          products.push({
-            ...doc.data(),
-            key: doc.id,
-            category,
-            categoryName: category?.name ?? "uncategorized",
-          });
+    const unsubscribe = firebase.products().onSnapshot((querySnapshot) => {
+      const products = [];
+      querySnapshot.forEach((doc) => {
+        const categoryId = doc.data().category;
+        const category = categories.find(
+          (category) => categoryId === category.id
+        );
+        products.push({
+          ...doc.data(),
+          key: doc.id,
+          category,
+          categoryName: category?.name ?? "uncategorized",
         });
-        setProducts(products);
-        setLoading(false);
       });
-    }
+      setProducts(products);
+      setLoading(false);
+    });
 
     return () => {
       unsubscribe();

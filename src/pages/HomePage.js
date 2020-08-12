@@ -3,15 +3,7 @@ import { Card, Typography, Row, Col, Grid } from "antd";
 import ProtectedComponent from "../components/ProtectedComponent";
 import MainLayout from "../components/Layout";
 import FirebaseContext from "../contexts/firebase";
-import {
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Bar,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from "recharts";
 
 function HomePage() {
   const firebase = useContext(FirebaseContext);
