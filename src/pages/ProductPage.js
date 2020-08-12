@@ -55,9 +55,16 @@ function CategoryPage() {
       key: "description",
     },
     {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      align: "right",
+    },
+    {
       title: "Stock",
       dataIndex: "stock",
       key: "stock",
+      align: "right",
     },
     {
       title: "Category",
@@ -128,6 +135,10 @@ function CategoryPage() {
         <Input />
       </Form.Item>
 
+      <Form.Item name="price" label="Price">
+        <InputNumber min={0} defaultValue={0} />
+      </Form.Item>
+
       <Form.Item name="stock" label="Stock">
         <InputNumber min={0} defaultValue={0} />
       </Form.Item>
@@ -195,7 +206,13 @@ function CategoryPage() {
   };
 
   const handleOk = () => {
-    const { name, description, category, stock = 0 } = form.getFieldsValue();
+    const {
+      name,
+      description,
+      category,
+      stock = 0,
+      price = 0,
+    } = form.getFieldsValue();
 
     if (!name || !category) {
       form.validateFields();
@@ -215,6 +232,7 @@ function CategoryPage() {
         .update({
           name,
           stock,
+          price,
           category,
           description: description ?? "",
         })
@@ -234,6 +252,7 @@ function CategoryPage() {
         .add({
           name,
           stock,
+          price,
           category,
           description: description ?? "",
         })
