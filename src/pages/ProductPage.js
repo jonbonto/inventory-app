@@ -16,6 +16,7 @@ import {
 import ProtectedComponent from "../components/ProtectedComponent";
 import FirebaseContext from "../contexts/firebase";
 import Layout from "../components/Layout";
+import ImageUpload from "../components/ImageUpload";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -31,11 +32,15 @@ const openNotificationWithIcon = (type, message, description) => {
   });
 };
 
+const noImageUrl =
+  "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101065/112815953-stock-vector-no-image-available-icon-flat-vector.jpg?ver=6";
+
 function CategoryPage() {
   const firebase = useContext(FirebaseContext);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState("");
   const [modal, setModal] = useState({
     visible: false,
     confirmLoading: false,
@@ -47,6 +52,16 @@ function CategoryPage() {
       title: "Name",
       dataIndex: "name",
       key: "name",
+    },
+
+    {
+      title: "Image",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
+      render: (text, record) => {
+        const imageUrl = text ? text : noImageUrl;
+        return <img src={imageUrl} alt="No Image" style={{ width: 48 }} />;
+      },
     },
 
     {
@@ -99,10 +114,11 @@ function CategoryPage() {
       id: product.key,
       category: product.category?.id,
     });
+    setImageUrl(product.imageUrl);
     setModal({
       visible: true,
       title: `Edit ${product.name}`,
-      content: AddForm,
+      content: getForm(product.imageUrl),
       edit: true,
     });
   };
@@ -124,7 +140,7 @@ function CategoryPage() {
       });
   };
 
-  const AddForm = (
+  const getForm = (imageUrl) => (
     <Form {...layout} form={form} name="control-hooks">
       <Form.Item name="id" label="Name" rules={[{ required: true }]} hidden />
       <Form.Item name="name" label="Name" rules={[{ required: true }]}>
@@ -150,6 +166,11 @@ function CategoryPage() {
           ))}
         </Select>
       </Form.Item>
+      <ImageUpload
+        firebase={firebase}
+        setImageUrl={setImageUrl}
+        imageUrl={imageUrl}
+      />
     </Form>
   );
 
@@ -201,7 +222,7 @@ function CategoryPage() {
     setModal({
       visible: true,
       title: "Add Product",
-      content: AddForm,
+      content: getForm(),
     });
   };
 
@@ -235,6 +256,7 @@ function CategoryPage() {
           price,
           category,
           description: description ?? "",
+          imageUrl: imageUrl ?? "",
         })
         .then(function () {
           setModal({
@@ -255,6 +277,7 @@ function CategoryPage() {
           price,
           category,
           description: description ?? "",
+          imageUrl: imageUrl ?? "",
         })
         .then(function (docRef) {
           setModal({
